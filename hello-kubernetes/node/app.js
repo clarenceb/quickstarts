@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 // These ports are injected automatically into the container.
 const daprPort = process.env.DAPR_HTTP_PORT; 
 const daprGRPCPort = process.env.DAPR_GRPC_PORT;
+const message = process.env.MESSAGE || 'Default';
 
 const stateStoreName = `statestore`;
 const stateUrl = `http://localhost:${daprPort}/v1.0/state/${stateStoreName}`;
@@ -55,7 +56,7 @@ app.post('/neworder', (req, res) => {
             throw "Failed to persist state.";
         }
 
-        console.log("Successfully persisted state.");
+        console.log(`Successfully persisted state by ${message}`);
         res.status(200).send();
     }).catch((error) => {
         console.log(error);
