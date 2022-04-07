@@ -21,6 +21,7 @@ while True:
     message = {"data": {"orderId": n}}
 
     try:
+        print("Sending message to nodeapp: {}".format(message))
         response = requests.post(nodeapp_url, json=message, timeout=5)
         if not response.ok:
             print("HTTP %d => %s" % (response.status_code,
