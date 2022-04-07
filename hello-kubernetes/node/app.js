@@ -14,12 +14,22 @@ app.use(bodyParser.json());
 const daprPort = process.env.DAPR_HTTP_PORT; 
 const daprGRPCPort = process.env.DAPR_GRPC_PORT;
 const message = process.env.MESSAGE || 'Default';
+const persistOrders = process.env.PERSIST_ORDERS || 'true';
 
 const stateStoreName = `statestore`;
 const stateUrl = `http://localhost:${daprPort}/v1.0/state/${stateStoreName}`;
 const port = 3000;
 
 app.get('/order', (_req, res) => {
+    if (persistOrders == 'false') {
+        console.log("Persistence not enabled -- returning stubbed result.");
+
+        orderId = Math.floor(Math.random() * 100) + 1;
+
+        res.send({"orderId": orderId});
+        return;
+    }
+
     fetch(`${stateUrl}/order`)
         .then((response) => {
             if (!response.ok) {
@@ -44,6 +54,12 @@ app.post('/neworder', (req, res) => {
         key: "order",
         value: data
     }];
+
+    if (persistOrders == 'false') {
+        console.log(`Successfully persisted state by ${message} (stubbed)`);
+        res.status(200).send();
+        return;
+    }
 
     fetch(stateUrl, {
         method: "POST",
