@@ -56,8 +56,9 @@ app.post('/neworder', (req, res) => {
     }];
 
     if (persistOrders == 'false') {
-        console.log(`Successfully persisted state by ${message} (stubbed)`);
-        res.status(200).send();
+        const content = `Successfully persisted state by ${message} (stubbed)`
+        console.log(content);
+        res.status(201).send({message: content});
         return;
     }
 
@@ -71,9 +72,9 @@ app.post('/neworder', (req, res) => {
         if (!response.ok) {
             throw "Failed to persist state.";
         }
-
-        console.log(`Successfully persisted state by ${message}`);
-        res.status(200).send();
+        const content = `Successfully persisted state by ${message}`
+        console.log(content);
+        res.status(201).send({message: content});
     }).catch((error) => {
         console.log(error);
         res.status(500).send({message: error});
